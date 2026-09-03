@@ -11,9 +11,10 @@ let state = createInitialState();
 
 function render() {
   cells.forEach((cell, i) => {
-    cell.textContent = state.board[i];
-    cell.className   = 'cell' + (state.board[i] ? ` ${state.board[i].toLowerCase()}` : '');
-    cell.disabled    = state.board[i] !== '' || state.gameOver;
+    const val = state.board[i];
+    cell.textContent = val === 'X' ? '🐱' : val === 'O' ? '🐶' : '';
+    cell.className   = 'cell' + (val ? ` ${val.toLowerCase()}` : '');
+    cell.disabled    = val !== '' || state.gameOver;
   });
 }
 
@@ -40,7 +41,8 @@ function handleClick(e) {
     state.gameOver = true;
     if (result.winner) {
       result.combo.forEach(i => cells[i].classList.add('winning'));
-      setStatus(`Player ${result.winner} wins!`, 'win');
+      const icon = result.winner === 'X' ? '🐱' : '🐶';
+      setStatus(`Player ${icon} wins!`, 'win');
     } else {
       setStatus("It's a draw!", 'draw');
     }
@@ -50,13 +52,14 @@ function handleClick(e) {
   }
 
   state.current = getNextPlayer(state.current);
-  setStatus(`Player ${state.current}'s turn`);
+  const icon = state.current === 'X' ? '🐱' : '🐶';
+  setStatus(`Player ${icon}'s turn`);
 }
 
 function restartGame() {
   state = createInitialState();
   render();
-  setStatus(`Player ${state.current}'s turn`);
+  setStatus(`Player 🐱's turn`);
 }
 
 cells.forEach(cell => cell.addEventListener('click', handleClick));
@@ -64,4 +67,4 @@ restartBtn.addEventListener('click', restartGame);
 
 // Initial render
 render();
-setStatus(`Player ${state.current}'s turn`);
+setStatus(`Player 🐱's turn`);
